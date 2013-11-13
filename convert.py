@@ -99,8 +99,25 @@ class Transform(object):
     
     def render_irc(self,converted):
         result = ""
+        
+        compressed = []
         for row in converted:
+            last = [None,0]
+            compressed_row = []
             for substitution in row:
+                if last[0] == substitution:
+                    last[1] += 1
+                else:
+                    if last[0] is not None:
+                        compressed_row.append(last)
+                    last = [substitution,1]
+            
+            if last[0] is not None:
+                compressed_row.append(last)
+            compressed.append(compressed_row)
+        
+        for row in compressed:
+            for substitution,count in row:
                 background = COLOURS[substitution[0][0]]
                 foreground = COLOURS[substitution[0][1]]
 
@@ -110,7 +127,7 @@ class Transform(object):
 
                 character = MASKS[substitution[1]]
 
-                result += "\x03%s,%s%s" % (foreground,background,character)
+                result += "\x03%s,%s%s" % (foreground,background,character * count)
             result += '\n'
         return result
     
