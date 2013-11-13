@@ -63,10 +63,10 @@ class Transform(object):
 
         return result
     
-    def convert(self,fp):
+    def convert(self,fp,size):
         image = Image.open(fp)
         #100,64
-        image.thumbnail((100,64))
+        image.thumbnail(size)
 
         # Our pixels are 2*1, so we need to (roughly) double the width
         width,height = image.size
@@ -179,11 +179,17 @@ if __name__ == '__main__':
     parser.add_argument("filename",help="image filename")
     parser.add_argument("--format", action="store",
                         default="irc",help="output format, 'html', 'irc' or 'raw'")
+    parser.add_argument("--width", action="store", type=int,
+                        default=100,help="max width")
+    parser.add_argument("--height", action="store", type=int,
+                        default=64,help="max height")
+
+
     args = parser.parse_args()
     
     
     fp = open(args.filename)
-    converted = transform.convert(fp)
+    converted = transform.convert(fp,(args.width,args.height))
     
     if args.format == 'irc':
         print transform.render_irc(converted)
