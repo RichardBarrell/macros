@@ -70,6 +70,8 @@ class Transform(object):
 
         # Our pixels are 2*1, so we need to (roughly) double the width
         width,height = image.size
+        sys.stderr.write("Thumbnail size: %sx%s\n" % (width,height))
+        
         image = image.resize((width*2, height), Image.ANTIALIAS)
 
         # These may be different to what we asked for above
