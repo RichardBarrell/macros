@@ -1,4 +1,4 @@
-IRC macro generator
-===================
+IRC image macros
+================
 
-Scripts for converting images into the format required by rubber's irc server.  This is thrown together, don't judge me.
+A script for converting images to a format where they can be dumped into IRC.  Inefficient and badly written, don't judge me.
