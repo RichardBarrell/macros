@@ -2,6 +2,7 @@
 # 
 from PIL import Image
 from argparse import ArgumentParser
+import sys
 
 # Colour mapping
 COLOURS = {(255,255,255):0,
@@ -115,8 +116,11 @@ class Transform(object):
             if last[0] is not None:
                 compressed_row.append(last)
             compressed.append(compressed_row)
+
+        max_length = 0
         
         for row in compressed:
+            line = ""
             for substitution,count in row:
                 background = COLOURS[substitution[0][0]]
                 foreground = COLOURS[substitution[0][1]]
@@ -127,8 +131,16 @@ class Transform(object):
 
                 character = MASKS[substitution[1]]
 
-                result += "\x03%s,%s%s" % (foreground,background,character * count)
-            result += '\n'
+                line += "\x03%s,%s%s" % (foreground,background,character * count)
+            
+            length = len(line) + 1 # +1 for newline
+            if length > max_length:
+                max_length = length
+                
+            result += line + '\n'
+        
+        sys.stderr.write("Max line length (anything over 468 is likely to break): %s\n" % max_length)
+        
         return result
     
     def render_raw(self,converted):
